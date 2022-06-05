@@ -7,3 +7,5 @@
 ## thop库 中 profile.py修改
 173行变成 pass;#print("[INFO] Register %s() for %s." % (fn.__qualname__, m_type)) 可以消除 [INFO]
 176行变成 pass;#prRed("[WARN] Cannot find rule for %s. Treat it as zero Macs and zero Params." % m_type) 可以消除[WARN]
+## 注意事项：
+第二个和第三个是为了符合论文作者中的编码规则进行修改的，因为我是调用了pytorch中的Desnet库进行操作的。你要是用其他的神经网络进行训练也是可行的。
