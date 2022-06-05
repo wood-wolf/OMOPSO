@@ -12,7 +12,15 @@ def fitness(in_, dim):
     blockConfig = []
     for i in range(dim):
         blockConfig.append(round(in_[i][0]))  # 把block的层数变成整数
-        growthRate.append(in_[i][1])
+        growthRate.append(int(round(in_[i][1])))  # 把 growthRate变成整数并且四舍五入取整
     # 输入增长率集合和4个块中每个块层数集合
     acc, flops = MOCNN.mocnn(growthRate, tuple(blockConfig))
     return [acc, flops]
+
+
+def fitness_plot(in_):
+    degree_45 = ((in_[0]-in_[1])**2/2)**0.5
+    degree_135 = ((in_[0]+in_[1])**2/2)**0.5
+    fit_1 = 1-np.exp(-(degree_45)**2/0.5)*np.exp(-(degree_135-np.sqrt(200))**2/250)
+    fit_2 = 1-np.exp(-(degree_45)**2/5)*np.exp(-(degree_135)**2/350)
+    return [fit_1,fit_2]

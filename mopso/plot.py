@@ -16,9 +16,10 @@ class Plot_pareto:
         self.x1, self.x2 = np.meshgrid(self.x1, self.x2)
         self.m, self.n = np.shape(self.x1)
         self.y1, self.y2 = np.zeros((self.m, self.n)), np.zeros((self.m, self.n))
+        self.dim = 4
         for i in range(self.m):
             for j in range(self.n):
-                [self.y1[i, j], self.y2[i, j]] = fit.fitness([self.x1[i, j], self.x2[i, j]])
+                [self.y1[i, j], self.y2[i, j]] = fit.fitness_plot([self.x1[i, j], self.x2[i, j]])
         if not os.path.exists('./img_txt'):
             os.makedirs('./img_txt')
             print('创建文件夹img_txt:保存粒子群每一次迭代的图片')
