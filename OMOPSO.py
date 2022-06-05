@@ -21,7 +21,6 @@ class Mopso(object):
         self.thresh = thresh
         self.range_list = range_list
         self.dim = blocks  # 块的个数等于维度
-        self.max_v = []
         self.max_v = [1, 1, 1, 1, (range_list[4][1] - range_list[4][0]) * 0.05]  # 速度上限
         self.min_v = [1, 1, 1, 1, (range_list[4][1] - range_list[4][0]) * 0.05 * (-1)]  # 速度下限
         self.plot_ = plot.Plot_pareto()
@@ -37,10 +36,11 @@ class Mopso(object):
         self.in_p, self.fitness_p = init.init_pbest(self.in_, self.fitness_)
         # 初始化外部存档
         self.archive_in, self.archive_fitness = init.init_archive(self.in_, self.fitness_)
+        print(self.archive_in.shape)
         # 初始化全局最优
         self.in_g, self.fitness_g = init.init_gbest(self.archive_in, self.archive_fitness, self.mesh_div,
-                                                    self.range_list
-                                                    , self.particals)
+                                                    self.range_list,
+                                                    self.particals)
 
     def evaluation_fitness(self):
         # 计算适应值
@@ -62,11 +62,12 @@ class Mopso(object):
         self.in_g, self.fitness_g = update.update_gbest(self.archive_in, self.archive_fitness, self.mesh_div, range_list
                                                         , self.particals)
 
-    def done(self, epochs):
+    def done(self, generations):
         self.initialize()
         self.plot_.show(self.in_, self.fitness_, self.archive_in, self.archive_fitness, -1)
-        for i in tqdm(range(epochs), desc='OMOPSO训练迭代中：'):
+        for i in tqdm(range(generations), desc='OMOPSO训练迭代中：'):
             self.update_()
+            # print(self.archive_fitness)
             self.plot_.show(self.in_, self.fitness_, self.archive_in, self.archive_fitness, i)
         return self.archive_in, self.archive_fitness
 
@@ -76,18 +77,20 @@ if __name__ == '__main__':
     c1 = 0.1  # 局部速度因子
     c2 = 0.1  # 全局速度因子
 
-    particals = 2  # 粒子群的数量
-    epochs = 1  # 迭代次数
+    particals = 3  # 粒子群的数量 20 50
+    generations = 1  # 迭代次数 20 10
 
     mesh_div = 10  # 网格等分数量
     thresh = 300  # 外部存档阀值
     blocks = 4  # 粒子的维度（网络的块数量）
-    range_list = [[4, 6], [4, 12], [4, 24], [4, 16], [8, 32]]
+    range_list = [[4, 6], [4, 12], [4, 24], [4, 16], [8, 32]]  # 前面四个是block中层数的范围，第五个是growth_rate的范围
     mopso_ = Mopso(particals, w, c1, c2, range_list, blocks, thresh, mesh_div)  # 粒子群实例化
-    pareto_in, pareto_fitness = mopso_.done(epochs)  # 经过epochs轮迭代后，pareto边界粒子
-    pareto = pareto_in.reshape(particals, 8)  # 把三维pareto边界粒子转成二维
+    pareto_in, pareto_fitness = mopso_.done(generations)  # 经过epochs轮迭代后，pareto边界粒子
+    pareto = pareto_in.reshape(len(pareto_in), 8)  # 把三维pareto边界粒子转成二维
     np.savetxt("./img_txt/pareto_in.txt", pareto)  # 保存pareto边界粒子的坐标
     np.savetxt("./img_txt/pareto_fitness.txt", pareto_fitness)  # 打印pareto边界粒子的适应值
+    # plot_ = plot.Plot_pareto()  # txt画图1
+    # plot_.show()  # txt画图2
     print("\n", "pareto边界的坐标保存于：./img_txt/pareto_in.txt")
     print(" pareto边界的适应值保存于：./img_txt/pareto_fitness.txt")
     print("\n", "迭代结束,over")
