@@ -32,7 +32,7 @@ def mocnn(growthRate, blockConfig):
     ave_acc = 0  # 测试集平均精度
     # 设置网络参数
     # 训练的轮数
-    epoch = 1
+    epoch = 1  # 300xx
     for i in range(epoch):
         print("------Desnet121-CIFAR10,第{}轮训练开始!------".format(i + 1))
 

@@ -3,6 +3,7 @@
 # 创建时间：2022/5/24
 import numpy as np
 
+
 def compare_(fitness_curr, fitness_ref):
     # 判断fitness_curr是否可以被fitness_ref完全支配
     for i in range(len(fitness_curr)):
@@ -22,7 +23,7 @@ def judge_(fitness_curr, fitness_data, cursor):
     return True
 
 
-class Pareto_:
+class Pareto_(object):
     def __init__(self, in_data, fitness_data):
         self.in_data = in_data  # 粒子群坐标信息
         self.fitness_data = fitness_data  # 粒子群适应值信息

@@ -37,8 +37,8 @@ def init_pbest(in_, fitness_):
 
 
 def init_archive(in_, fitness_):
-    pareto_c = pareto.Pareto_(in_, fitness_)
-    curr_archiving_in, curr_archiving_fit = pareto_c.pareto()
+    pareto_c = pareto.Pareto_(in_, fitness_)  # pareto实例化
+    curr_archiving_in, curr_archiving_fit = pareto_c.pareto()  #
     return curr_archiving_in, curr_archiving_fit
 
 

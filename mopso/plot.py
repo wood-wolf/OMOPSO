@@ -17,15 +17,26 @@ class Plot_pareto:
         self.m, self.n = np.shape(self.x1)
         self.y1, self.y2 = np.zeros((self.m, self.n)), np.zeros((self.m, self.n))
         self.dim = 4
-        for i in range(self.m):
-            for j in range(self.n):
-                [self.y1[i, j], self.y2[i, j]] = fit.fitness_plot([self.x1[i, j], self.x2[i, j]])
+        # for i in range(self.m):
+        #     for j in range(self.n):
+        #         [self.y1[i, j], self.y2[i, j]] = fit.fitness_plot([self.x1[i, j], self.x2[i, j]])
         if not os.path.exists('./img_txt'):
             os.makedirs('./img_txt')
             print('创建文件夹img_txt:保存粒子群每一次迭代的图片')
 
-    def show(self, in_, fitness_, archive_in, archive_fitness, i):
+    def show(self, in_, fitness_, archive_in, archive_fitness, i):  #
+        # accurate = []
+        # flops = []
+        # with open('./img_txt/pareto_fitness.txt', 'r', encoding='utf8') as f:
+        #     fitness_list = f.readlines()
+        #     for fitness in fitness_list:
+        #         accurate.append(eval(fitness.lstrip('\n').split(' ')[0]))
+        #         flops.append(eval(fitness.lstrip('\n').split(' ')[1]))
+        # f.close()
+        flops = fitness_[:, 1]
+        accurate = fitness_[:, 0]
         # 共3个子图，第1、2/子图绘制输入坐标与适应值关系，第3图展示pareto边界的形成过程
+
         fig = plt.figure(13, figsize=(17, 5))
 
         # ax1 = fig.add_subplot(131, projection='3d')
@@ -56,12 +67,13 @@ class Plot_pareto:
         # ax2.scatter(archive_in[:, 0], archive_in[:, 1], archive_fitness[:, 1], s=50, c='red', marker=".")
 
         ax3 = fig.add_subplot(133)
-        ax3.set_xlim((0, 1))
+        ax3.set_xlim((0, 10 ** 10))
         ax3.set_ylim((0, 1))
         ax3.set_xlabel('FLOPs')
         ax3.set_ylabel('accuracy')
-        ax3.scatter(fitness_[:, 0], fitness_[:, 1], s=10, c='blue', marker=".")
-        ax3.scatter(archive_fitness[:, 0], archive_fitness[:, 1], s=30, c='red', marker=".", alpha=1.0)
+        ax3.scatter(archive_fitness[:, 1], archive_fitness[:, 0], s=30, c='red', marker=".",
+                    alpha=1.0)  # archive_fitness[:, 0], archive_fitness[:, 1]
+        ax3.scatter(fitness_[:, 1], fitness_[:, 0], s=10, c='blue', marker='.')
         # plt.show()
         plt.savefig('./img_txt/第' + str(i + 1) + '次迭代.png')
         print('第' + str(i + 1) + '次迭代的图片保存于 img_txt 文件夹')
