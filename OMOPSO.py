@@ -8,6 +8,10 @@ from mopso import update
 from mopso import plot
 from tqdm import tqdm
 
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'  # 避免libiomp5md.dll初始化错误
+
 
 class Mopso(object):
     def __init__(self, particals, w, c1, c2, range_list, blocks, thresh, mesh_div=10):
@@ -34,14 +38,15 @@ class Mopso(object):
         # 初始化外部存档
         self.archive_in, self.archive_fitness = init.init_archive(self.in_, self.fitness_)
         # 初始化全局最优
-        self.in_g, self.fitness_g = init.init_gbest(self.archive_in, self.archive_fitness, self.mesh_div, self.range_list
+        self.in_g, self.fitness_g = init.init_gbest(self.archive_in, self.archive_fitness, self.mesh_div,
+                                                    self.range_list
                                                     , self.particals)
 
     def evaluation_fitness(self):
         # 计算适应值
         fitness_curr = []
         for i in range(self.in_.shape[0]):
-            fitness_curr.append(fitness_funs.fitness(self.in_[i],self.dim))
+            fitness_curr.append(fitness_funs.fitness(self.in_[i], self.dim))
         self.fitness_ = np.array(fitness_curr)  # 适应值
 
     def update_(self):
@@ -80,10 +85,9 @@ if __name__ == '__main__':
     range_list = [[4, 6], [4, 12], [4, 24], [4, 16], [8, 32]]
     mopso_ = Mopso(particals, w, c1, c2, range_list, blocks, thresh, mesh_div)  # 粒子群实例化
     pareto_in, pareto_fitness = mopso_.done(epochs)  # 经过epochs轮迭代后，pareto边界粒子
-    print('怕累托粒子：',pareto_in)
-    print('帕累托适应值：',pareto_fitness)
-    np.savetxt("./img_txt/pareto_in.txt", pareto_in)  # 保存pareto边界粒子的坐标
+    pareto = pareto_in.reshape(particals, 8)  # 把三维pareto边界粒子转成二维
+    np.savetxt("./img_txt/pareto_in.txt", pareto)  # 保存pareto边界粒子的坐标
     np.savetxt("./img_txt/pareto_fitness.txt", pareto_fitness)  # 打印pareto边界粒子的适应值
-    # print("\n", "pareto边界的坐标保存于：./img_txt/pareto_in.txt")
-    # print(" pareto边界的适应值保存于：./img_txt/pareto_fitness.txt")
-    # print("\n", "迭代结束,over")
+    print("\n", "pareto边界的坐标保存于：./img_txt/pareto_in.txt")
+    print(" pareto边界的适应值保存于：./img_txt/pareto_fitness.txt")
+    print("\n", "迭代结束,over")
