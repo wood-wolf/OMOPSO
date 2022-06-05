@@ -7,4 +7,3 @@
 ## thop库 中 profile.py修改
 173行变成 pass;#print("[INFO] Register %s() for %s." % (fn.__qualname__, m_type)) 可以消除 [INFO]
 176行变成 pass;#prRed("[WARN] Cannot find rule for %s. Treat it as zero Macs and zero Params." % m_type) 可以消除[WARN]
-## 
