@@ -1,5 +1,6 @@
 # OMOPSO
 这是Evolving Deep Neural Networks by Multi-objective Particle的复现；多目标优化粒子群算法+CNN网络；实现调参。
+智能控制理论与技术的小组作业
 # 使用方法
 OMOPSO.py文件是主函数文件可以直接运行，需要修改的参数有particals;generations;另外MOCNN.py中的epoch也要改。
 ## pytorch 中Desnet.py修改
